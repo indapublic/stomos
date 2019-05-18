@@ -1,0 +1,39 @@
+{% extends "base.html.twig" %}
+
+{% block nav %}
+	{{ parent() }}
+{% endblock %}
+
+{% block body %}
+	<table class="table">
+		<thead>
+			<tr>
+				<th class="sort">{{ knp_pagination_sortable(pagination, 'Username', 't.username') }}</th>
+				<th>{{ knp_pagination_sortable(pagination, 'Email', 't.email') }}</th>
+				<th>Description</th>
+				<th>{{ knp_pagination_sortable(pagination, 'Completed', 't.completed') }}</th>
+				<th>&nbsp;</th>
+			</tr>
+		</thead>
+		{% if pagination.items|length %}
+		<tbody>
+			{% for task in pagination %}
+				<tr class="{% if loop.index is odd %}table-active{% endif %}">
+					<td>{{ task.username }}</td>
+					<td>{{ task.email }}</td>
+					<td>{{ task.description }}</td>
+					<td>{{ task.completed ? 'Completed' : 'Not completed' }}</td>
+					<td>
+						<a href="{{ path('tasks_view', { task: task.uid }) }}">View</a>
+					</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+		{% endif %}
+	</table>
+	<p>
+		Total records: {{ pagination.getTotalItemCount }}
+	</p>
+	{{ knp_pagination_render(pagination) }}
+
+{% endblock %}

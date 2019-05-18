@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Tasks{% endblock %}</title>
+        {% block stylesheets %}
+            <link href="{{ asset('build/app.css') }}" rel="stylesheet">
+        {% endblock %}
+    </head>
+    <body>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    {% block nav %}
+                        {% include 'nav.html.twig' %}
+                    {% endblock %}
+                    {% block body %}
+                    {% endblock %}
+                    {% block javascripts %}
+                        <script type="text/javascript" src="{{ asset('build/runtime') }}"></script>
+                        {{ encore_entry_script_tags('app') }}
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

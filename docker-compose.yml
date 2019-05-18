@@ -1,0 +1,46 @@
+version: '3.7'
+services:
+    db:
+        image: postgres
+        ports:
+            - '15433:5432'
+        environment:
+            POSTGRES_USER: stomos
+            POSTGRES_PASSWORD: stomos
+            POSTGRES_DB: stomos
+    php:
+        build: ./php-fpm
+        ports:
+            - "19000:9001"
+        volumes:
+            - ./symfony:/var/www/symfony:cached
+            - ./shared/logs/symfony:/var/www/symfony/var/log:cached
+        links:
+            - db
+        extra_hosts:
+            - "docker-host.localhost:127.0.0.1"
+    node:
+        image: node:10-alpine
+        volumes:
+            - ./symfony:/var/www/symfony:cached
+        working_dir: /var/www/symfony
+        tty: true
+    nginx:
+        build: ./nginx
+        ports:
+            - "10080:80"
+        links:
+            - php
+        volumes:
+            - ./shared/logs/nginx:/var/log/nginx:cached
+            - ./symfony:/var/www/symfony:cached
+    elk:
+        image: willdurand/elk
+        ports:
+            - "10081:80"
+        volumes:
+            - ./shared/elk/logstash:/etc/logstash:cached
+            - ./shared/elk/logstash/patterns:/opt/logstash/patterns:cached
+            - ./shared/logs/symfony:/var/www/symfony/var/log:cached
+            - ./shared/logs/nginx:/var/log/nginx:cached
+
